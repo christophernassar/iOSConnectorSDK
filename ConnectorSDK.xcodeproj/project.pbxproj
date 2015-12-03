@@ -21,6 +21,7 @@
 		AA20F13C1C088947003228D7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		AA20F13F1C088E4E003228D7 /* LoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingView.h; sourceTree = "<group>"; };
 		AA20F1401C088E4E003228D7 /* LoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingView.m; sourceTree = "<group>"; };
+		AA74F59E1C103D60001BC481 /* globalVaribales.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = globalVaribales.h; sourceTree = "<group>"; };
 		AAD56D651BFF64C4003E3363 /* ConnectorSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ConnectorSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAD56D681BFF64C4003E3363 /* ConnectorSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConnectorSDK.h; sourceTree = "<group>"; };
 		AAD56D6A1BFF64C4003E3363 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -85,6 +86,7 @@
 				AAD56D701BFF65AE003E3363 /* Connector.h */,
 				AAD56D711BFF65AE003E3363 /* Connector.m */,
 				AAD56D791BFF65BA003E3363 /* Protocol */,
+				AA74F59E1C103D60001BC481 /* globalVaribales.h */,
 			);
 			name = Core;
 			sourceTree = "<group>";

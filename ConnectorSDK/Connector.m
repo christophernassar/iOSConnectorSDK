@@ -7,9 +7,11 @@
 //
 
 #import "Connector.h"
+#import "globalVaribales.h"
 #import "LoadingView.h"
 
 static NSDictionary* urlMap;
+static NSMutableDictionary* uiMap;
 static NSMutableDictionary* errorLogs;
 static LoadingView* loadingView;
 static UIViewController* currentContainer;
@@ -46,20 +48,140 @@ static BOOL showLoadingView = true;
     showLoadingView = enableLoadingView;
 }
 
-+(void)ConfigureLoadingWithIndicator:(BOOL)withIndicator withMessage:(NSString*)message withImageData:(NSData*)imageData withImageURL:(NSString*)url inContainer:(UIViewController*)container{
+//Default UI settings
++(NSDictionary*)uiMap{
+    if(uiMap == nil){
+        uiMap = [[NSMutableDictionary alloc] init];
+        [uiMap setObject:[UIColor whiteColor] forKey:LOADING_INDICATOR_COL] ;
+        [uiMap setObject:[UIColor colorWithWhite:0.5 alpha:0.5] forKey:LOADING_BACKGROUND_COL];
+        [uiMap setObject:[UIColor whiteColor] forKey:LOADING_MESSAGE_COL];
+        [uiMap setObject:[UIFont boldSystemFontOfSize:30] forKey:LOADING_MESSAGE_FNT];
+        [uiMap setObject:@"Loading ..." forKey:LOADING_MESSAGE_TXT];
+        [uiMap setObject:[NSNumber numberWithBool:TRUE] forKey:LOADING_SHOW_INDICATOR];
+        [uiMap setObject:[NSNumber numberWithBool:TRUE] forKey:LOADING_SHOW_MESSAGE];
+        [uiMap setObject:[NSNumber numberWithBool:FALSE] forKey:LOADING_SHOW_IMAGE_URL];
+        [uiMap setObject:[NSNumber numberWithBool:FALSE] forKey:LOADING_SHOW_IMAGE_DATA];
+    }
     
-    if(!showLoadingView){
+    return uiMap;
+}
+
++(void)PrintUIMap{
+    if([Connector uiMap] == nil){
+         NSLog(@"UI MAP NOT INITIALIZED");
         return;
     }
-    if(loadingView && loadingView.superview){
-        [loadingView removeFromSuperview];
-    }
+    NSLog(@"UI_MAP:");
     
-    currentContainer = container;
+    NSLog(@"INDICATOR_SHOW: %@",[uiMap objectForKey:LOADING_SHOW_INDICATOR]);
+    NSLog(@"INDICATOR_COLOR: %@",[uiMap objectForKey:LOADING_INDICATOR_COL]);
     
-    if(currentContainer){
-        loadingView = [[LoadingView alloc] initWithFrame:CGRectMake(0, 0, currentContainer.view.frame.size.width, currentContainer.view.frame.size.height) showIndicator:withIndicator withMessage:message withImageData:imageData withImageURL:url];
+    NSLog(@"BACKGROUND_COLOR: %@",[uiMap objectForKey:LOADING_BACKGROUND_COL]);
+    
+    NSLog(@"MESSAGE_SHOW: %@",[uiMap objectForKey:LOADING_SHOW_MESSAGE]);
+    NSLog(@"MESSAGE_COLOR: %@",[uiMap objectForKey:LOADING_MESSAGE_COL]);
+    NSLog(@"MESSAGE_FONT: %@",[uiMap objectForKey:LOADING_MESSAGE_FNT]);
+    NSLog(@"MESSAGE_TXT: %@",[uiMap objectForKey:LOADING_MESSAGE_FNT]);
+    
+    NSLog(@"IMAGE_DATA_SHOW: %@",[uiMap objectForKey:LOADING_SHOW_IMAGE_DATA]);
+    NSLog(@"IMAGE_DATA: %@",[uiMap objectForKey:LOADING_IMAGE_DATA]);
+    
+    NSLog(@"IMAGE_URL_SHOW: %@",[uiMap objectForKey:LOADING_SHOW_IMAGE_URL]);
+    NSLog(@"IMAGE_URL: %@",[uiMap objectForKey:LOADING_IMAGE_URL]);
+}
+
++(void)LogFailure:(Class) expected withActual:(Class) actual{
+      NSLog(@"Type Incorrect, expected %@ actual %@",NSStringFromClass(expected),NSStringFromClass(actual));
+}
+
++(void)SetUIMapObject:(UI_TYPE)uiType withObject:(id)object{
+    
+    if([Connector uiMap]){
+        switch (uiType) {
+            case BACKGROUND_COLOR:
+                if([object isKindOfClass:[UIColor class]]){
+                    [uiMap setObject:object forKey:LOADING_BACKGROUND_COL];
+                }else{
+                    [self LogFailure:[UIColor class] withActual:[object class]];
+                }
+                break;
+            case INDICATOR_COLOR:
+                if([object isKindOfClass:[UIColor class]]){
+                    [uiMap setObject:object forKey:LOADING_INDICATOR_COL];
+                }else{
+                    [self LogFailure:[UIColor class] withActual:[object class]];
+                }
+                break;
+            case MESSAGE_FONT:
+                if([object isKindOfClass:[UIFont class]]){
+                    [uiMap setObject:object forKey:LOADING_MESSAGE_FNT];
+                }else{
+                    [self LogFailure:[UIFont class] withActual:[object class]];
+                }
+                break;
+            case MESSAGE_TEXT:
+                if([object isKindOfClass:[NSString class]]){
+                    [uiMap setObject:object forKey:LOADING_MESSAGE_TXT];
+                }else{
+                    [self LogFailure:[UIFont class] withActual:[object class]];
+                }
+                break;
+            case MESSAGE_COLOR:
+                if([object isKindOfClass:[UIColor class]]){
+                    [uiMap setObject:object forKey:LOADING_MESSAGE_COL];
+                }else{
+                    [self LogFailure:[UIColor class] withActual:[object class]];
+                }
+                break;
+            case SHOW_INDICATOR:
+                if([object isKindOfClass:[NSNumber class]]){
+                    [uiMap setObject:object forKey:LOADING_SHOW_INDICATOR];
+                }else{
+                    [self LogFailure:[NSNumber class] withActual:[object class]];
+                }
+                break;
+            case SHOW_MESSAGE:
+                if([object isKindOfClass:[NSNumber class]]){
+                    [uiMap setObject:object forKey:LOADING_SHOW_MESSAGE];
+                }else{
+                    [self LogFailure:[NSNumber class] withActual:[object class]];
+                }
+                break;
+            case SHOW_IMAGE_DATA:
+                if([object isKindOfClass:[NSNumber class]]){
+                    [uiMap setObject:object forKey:LOADING_SHOW_IMAGE_DATA];
+                }else{
+                    [self LogFailure:[NSNumber class] withActual:[object class]];
+                }
+                break;
+            case SHOW_IMAGE_URL:
+                if([object isKindOfClass:[NSNumber class]]){
+                    [uiMap setObject:object forKey:LOADING_SHOW_IMAGE_URL];
+                }else{
+                    [self LogFailure:[NSNumber class] withActual:[object class]];
+                }
+                break;
+            case IMAGE_DATA:
+                if([object isKindOfClass:[NSData class]]){
+                    [uiMap setObject:object forKey:LOADING_IMAGE_DATA];
+                }else{
+                    [self LogFailure:[NSData class] withActual:[object class]];
+                }
+                break;
+            case IMAGE_URL:
+                if([object isKindOfClass:[NSString class]]){
+                    [uiMap setObject:object forKey:LOADING_IMAGE_URL];
+                }else{
+                    [self LogFailure:[NSString class] withActual:[object class]];
+                }
+                break;
+        }
+        [loadingView UpdateUI:uiMap];
     }
+}
+
++(NSDictionary*)GetURLMapDictionary{
+    return urlMap;
 }
 
 +(void)SetURLMapDictionary:(NSDictionary*)urlM{
@@ -78,7 +200,13 @@ static BOOL showLoadingView = true;
     self = [super self];
     
     showLoadingView = ShowLoading;
-    [Connector ConfigureLoadingWithIndicator:true withMessage:@"test" withImageData:nil withImageURL:nil inContainer:(UIViewController*)delegate];
+    currentContainer = (UIViewController*)delegate;
+    
+    if(loadingView && loadingView.superview){
+        [loadingView removeFromSuperview];
+    }
+    
+    loadingView = [[LoadingView alloc] initWithFrame:CGRectMake(0, 0, currentContainer.view.frame.size.width, currentContainer.view.frame.size.height) withUIMap:uiMap];
     
     
     if(self){
@@ -115,7 +243,7 @@ static BOOL showLoadingView = true;
 
     }
     
-    if(loadingView && currentContainer){
+    if(showLoadingView && loadingView && currentContainer){
         [currentContainer.view addSubview:loadingView];
     }
     

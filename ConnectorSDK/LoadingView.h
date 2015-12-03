@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface LoadingView : UIView
--(id)initWithFrame:(CGRect)frame showIndicator:(BOOL)showIndicator withMessage:(NSString*)message withImageData:(NSData*)imageData withImageURL:(NSString*)imageUrl;
+
+-(void)UpdateUI:(NSDictionary*)uimap;
+-(id)initWithFrame:(CGRect)frame withUIMap:(NSDictionary*)uimap;
 @end

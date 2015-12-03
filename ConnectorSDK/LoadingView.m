@@ -7,6 +7,7 @@
 //
 
 #import "LoadingView.h"
+#import "globalVaribales.h"
 
 @interface LoadingView()
 @property(nonatomic) UIActivityIndicatorView* loadingIndicator;
@@ -16,37 +17,58 @@
 
 @implementation LoadingView
 
--(id)initWithFrame:(CGRect)frame showIndicator:(BOOL)showIndicator withMessage:(NSString*)message withImageData:(NSData*)imageData withImageURL:(NSString*)imageUrl{
+-(void)UpdateUI:(NSDictionary*)uimap{
+    
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        self.backgroundColor = [uimap objectForKey:LOADING_BACKGROUND_COL];
+        [_loadingIndicator setBackgroundColor:[uimap objectForKey:LOADING_INDICATOR_COL]];
+        [_loadingMessage setTextColor:[uimap objectForKey:LOADING_MESSAGE_COL]];
+        [_loadingMessage setFont:[uimap objectForKey:LOADING_MESSAGE_FNT]];
+
+    }];
+}
+
+-(id)initWithFrame:(CGRect)frame withUIMap:(NSDictionary*)uimap{
     self = [super initWithFrame:frame];
     if(self){
-        self.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+        self.backgroundColor = [uimap objectForKey:LOADING_BACKGROUND_COL];
+        
+        BOOL showIndicator = [[uimap objectForKey:LOADING_SHOW_INDICATOR] boolValue];
+        BOOL showMessage = [[uimap objectForKey:LOADING_SHOW_MESSAGE] boolValue];
+        BOOL showImageData = [[uimap objectForKey:LOADING_SHOW_IMAGE_DATA] boolValue];
+        BOOL showImageURL = [[uimap objectForKey:LOADING_SHOW_IMAGE_URL] boolValue];
+        
+        NSString* messageTxt = [uimap objectForKey:LOADING_MESSAGE_TXT];
+        NSData* imageData = [uimap objectForKey:LOADING_IMAGE_DATA];
+        NSString* imageUrl = [uimap objectForKey:LOADING_IMAGE_URL];
         
         if(showIndicator){
             _loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
             
+            [_loadingIndicator setColor:[uimap objectForKey:LOADING_INDICATOR_COL]];
             [_loadingIndicator setCenter:CGPointMake(frame.size.width/2, frame.size.height/2)];
             [_loadingIndicator startAnimating];
             [self addSubview:_loadingIndicator];
         }
         
-        if(message.length > 0){
+        if(showMessage && messageTxt.length>0){
             _loadingMessage = [[UILabel alloc] initWithFrame:CGRectMake(0, _loadingIndicator.center.y+_loadingIndicator.frame.size.height, frame.size.width, 20)];
             
-            [_loadingMessage setText:message];
+            [_loadingMessage setText:messageTxt];
             [_loadingMessage setTextAlignment:NSTextAlignmentCenter];
-            [_loadingMessage setTextColor:[UIColor whiteColor]];
-            [_loadingMessage setFont:[UIFont boldSystemFontOfSize:30]];
+            [_loadingMessage setTextColor:[uimap objectForKey:LOADING_MESSAGE_COL]];
+            [_loadingMessage setFont:[uimap objectForKey:LOADING_MESSAGE_FNT]];
             [self addSubview:_loadingMessage];
         }
         
-        if(imageData.length > 0){
+        if(showImageData && imageData.length > 0){
             _loadingImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
             [_loadingImage setImage:[UIImage imageWithData:imageData]];
             [self addSubview:_loadingImage];
             [self sendSubviewToBack:_loadingImage];
         }
         
-        if(imageUrl.length > 0){
+        if(showImageURL && imageUrl.length > 0){
             [[[NSOperationQueue alloc] init] addOperationWithBlock:^{
                 NSData* data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]];
                 if(data.length > 0){
